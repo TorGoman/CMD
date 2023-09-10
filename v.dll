@@ -86,7 +86,7 @@ mode con: cols=112 lines=40
 title Ankh Tech Toolbox
 cls
 @echo.================================================================================================================
-@echo.                    Ankh Tech Toolbox                         # NAME OS : %HostOSName% %OSArchitecture%
+@echo.                    Ankh Tech Toolbox   By.TorGoman           # NAME OS : %HostOSName% %OSArchitecture%
 @echo.   Choose From the List (Write the Number and Press Enter)    # VERSION : %HostBuild%
 @echo.    (Offline)=No Need Internet , (Pro)=Activated Program      # PC NAME : %computername%
 @echo.================================================================================================================
