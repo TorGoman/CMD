@@ -1,0 +1,1094 @@
+::[Bat To Exe Converter]
+::
+::fBE1pAF6MU+EWHreyHcjLQlHcCWOMWq0H4k47fvw++WXnnkYR/ZuRK7v7qOLIesAig==
+::fBE1pAF6MU+EWHreyHcjLQlHcCWOMWq0H4k47fvw++WXnnkYR/ZuRK7v/L2CJfNz
+::fBE1pAF6MU+EWHreyHcjLQlHcCWOMWq0H4k47fvw++WXnnkYR/ZuRK7v7rGDMIA=
+::YAwzoRdxOk+EWAjk
+::fBw5plQjdCyDJGyX8VAjFDpYQQWMJVeeA6YX/Ofr0+OErUNTXeEwGA==
+::YAwzuBVtJxjWCl3EqQJgSA==
+::ZR4luwNxJguZRRnk
+::Yhs/ulQjdF25
+::cxAkpRVqdFKZSDk=
+::cBs/ulQjdF25
+::ZR41oxFsdFKZSTk=
+::eBoioBt6dFKZSDk=
+::cRo6pxp7LAbNWATEpSI=
+::egkzugNsPRvcWATEpSI=
+::dAsiuh18IRvcCxnZtBJQ
+::cRYluBh/LU+EWAnk
+::YxY4rhs+aU+IeA==
+::cxY6rQJ7JhzQF1fEqQJhZksaHErSXA==
+::ZQ05rAF9IBncCkqN+0xwdVsFAlTMbCXqZg==
+::ZQ05rAF9IAHYFVzEqQIRJhBceAGBNCuOCboQ6ufjjw==
+::eg0/rx1wNQPfEVWB+kM9LVsJDCWMN2OOA7YUqNz04OaFrVV9
+::fBEirQZwNQPfEVWB+kM9LVsJDCWMN2OOA7YUqNz04OaFrVV9
+::cRolqwZ3JBvQF1fEqQIRJhBceAGBNCuOCboQ6ufjjw==
+::dhA7uBVwLU+EWHiK/0oELRhcLA==
+::YQ03rBFzNR3SWATE1Uw7IC9RTwzi
+::dhAmsQZ3MwfNWATE1Uw7IC9RTwzi
+::ZQ0/vhVqMQ3MEVWAtB9wSA==
+::Zg8zqx1/OA3MEVWAtB9wSA==
+::dhA7pRFwIByZRRnk
+::Zh4grVQjdCyDJGyX8VAjFDpYQQWMJVeeA6YX/Ofr08uJqUUpUeE3OLvU1biML/hd713hFQ==
+::YB416Ek+ZW8=
+::
+::
+::978f952a14a936cc963da21a135fa983
+echo off
+::===========================================================================================
+::if you are reading this then you have found the script
+::you have a choice of two
+::you either join me or you will be cursed for the rest of your life
+::it could be a joke, but if it's not can you afford being cursed for the rest of your life ?
+::===========================================================================================
+
+color 0B
+mode con: cols=112 lines=36
+title Ankh Tech Toolbox
+
+setlocal EnableExtensions EnableDelayedExpansion
+cd %systemroot%\system32
+
+:: Setting Toolbox environment path variables
+set "Files=%userprofile%\AppData\Roaming\ATFiles"
+set "Temp=%userprofile%\AppData\Roaming\ATTemp"
+set "Tweaks=%userprofile%\AppData\Roaming\ATTweaks"
+
+:: Setting Toolbox dependent tools environment path variables
+set "wget=%Files%\wget.exe"
+set "zip=%Files%\7z.exe"
+
+:: Setting Host OS version, architecture and language variables
+set HostArchitecture=
+set HostBuild=
+set HostReleaseVersion=
+set HostDisplayVersion=
+set HostEdition=
+set HostInstallationType=
+set HostLanguage=
+set HostOSName=
+set HostServicePackBuild=
+set HostVersion=
+
+if exist "%WinDir%\SysWOW64" (set "OSArchitecture=x64") else (set "OSArchitecture=x86")
+for /f "tokens=3 delims= " %%i in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "CurrentBuild" ^| find "REG_SZ"') do (set HostBuild=%%i)
+for /f "tokens=3 delims= " %%j in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /f "ReleaseId" ^| find "REG_SZ"') do (set /A HostReleaseVersion=%%j & if "%%j" lss "2004" set /A HostDisplayVersion=%%j)
+for /f "tokens=3 delims= " %%l in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "EditionID" ^| find "REG_SZ"') do (set HostEdition=%%l)
+for /f "tokens=3 delims= " %%m in ('reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "InstallationType" ^| find "REG_SZ"') do (set HostInstallationType=%%m)
+for /f "tokens=6 delims= " %%o in ('DISM /Online /English /Get-Intl ^| findstr /i /C:"Default system UI language"') do (set HostLanguage=%%o)
+for /f "tokens=7 delims=[]. " %%r in ('ver 2^>nul') do (set /A HostServicePackBuild=%%r)
+for /f "tokens=4-5 delims=[]. " %%s in ('ver 2^>nul') do (set "HostVersion=%%s.%%t" & set "HostOSName=Windows %%s %HostEdition% %HostInstallationType%" & if "%HostBuild%" equ "7601" set "HostOSName=!HostOSName:6=7! SP1" & if "%HostBuild%" equ "9600" set "HostOSName=!HostOSName:6=8!.1" & if "%HostBuild%" geq "21996" set "HostOSName=!HostOSName:10=11!")
+
+:: Interface===========================================================================================================
+:MainMenu
+color 0B
+mode con: cols=112 lines=40
+title Ankh Tech Toolbox
+cls
+@echo.================================================================================================================
+@echo.                    Ankh Tech Toolbox                         # NAME OS : %HostOSName% %OSArchitecture%
+@echo.   Choose From the List (Write the Number and Press Enter)    # VERSION : %HostBuild%
+@echo.    (Offline)=No Need Internet , (Pro)=Activated Program      # PC NAME : %computername%
+@echo.================================================================================================================
+@echo. - Programs                       # - Runtimes/Frameworks               # - Tweaks (Offline)
+@echo. 1-7-Zip                          # 41-AdobeAIR                         # 81-Enable Windows Photo viewer
+@echo. 2-WinRAR (Pro)                   # 42-Microsoft XNA                    # 82-Add Take Ownership to Context Menu 
+@echo. 3-UltraISO (Pro)                 # 43-OpenAL                           # 83-Pause Windows updates until 2050
+@echo. 4-AIMP                           # 44-DirectX (abbodi1406)             # 84-Reserved Storage
+@echo. 5-Media Player Classic           # 45-Visual C++ 2005-2022             # 85-Hibernation
+@echo. 6-Wise Disk Cleaner              #                                     # 86-Compact Windows
+@echo. 7-Avast (Free)                   #                                     # 87-Clean up WinSxS
+@echo. 8-Edge Chromium                  # 50-Install All (Recommended)        # 
+@echo. 9-Google Chrome                  #                                     # 
+@echo. 10-Mozilla Firefox               #                                     #
+@echo. 11-Brave Browser                 #                                     #
+@echo.                                  #=====================================#  
+@echo. - Programs Portable              # - Windows 8.1/10/11 Activation      # - Unsafe Tweaks (Offline)
+@echo. 21-Driver Easy (Pro)             # 61-KMS38 (Offline)                  # 101-Highest Performance
+@echo. 22-Driver Booster (Pro)          # 62-HWID                             # 102-Disable Windows Defender
+@echo. 23-MiniTool Partition Wizard(Pro)# 63-KMS Inject (Offline)             # 
+@echo.                                  # 64-KMS Renewal Task                 # 
+@echo.                                  #                                     # 
+@echo.                                  # - Microsoft Office Activation       # 
+@echo.                                  # 71-Online Activation                #
+@echo.                                  # 72-Offline KMS (Offline)            # 
+@echo.                                  #                                     # 
+@echo.                                  # - Windows 7 Activation              #
+@echo.                                  # 75-Daz Loader                       #
+@echo.                                  # 76-RemoveWAT                        #
+@echo.                                  #                                     # 
+@echo.                                  #    80-Check Activation Status       #
+@echo.================================================================================================================
+@echo. Created by AnkhTech ,Please if you like it support us!    121-Support Us     122-Our Website      123-Exit
+@echo.================================================================================================================
+
+@echo off
+set /p op=. What did you choose ?:
+
+if "%op%"=="1" goto :op1
+if "%op%"=="2" goto :op2
+if "%op%"=="3" goto :op3
+if "%op%"=="4" goto :op4
+if "%op%"=="5" goto :op5
+if "%op%"=="6" goto :op6
+if "%op%"=="7" goto :op7
+if "%op%"=="8" goto :op8
+if "%op%"=="9" goto :op9
+if "%op%"=="10" goto :op10
+if "%op%"=="11" goto :op11
+
+if "%op%"=="21" goto :op21
+if "%op%"=="22" goto :op22
+if "%op%"=="23" goto :op23
+
+if "%op%"=="41" goto :op41
+if "%op%"=="42" goto :op42
+if "%op%"=="43" goto :op43
+if "%op%"=="44" goto :op44
+if "%op%"=="45" goto :op45
+if "%op%"=="50" goto :op50
+
+if "%op%"=="61" goto :op61
+if "%op%"=="62" goto :op62
+if "%op%"=="63" goto :op63
+if "%op%"=="64" goto :op64
+if "%op%"=="71" goto :op71
+if "%op%"=="72" goto :op72
+if "%op%"=="75" goto :op75
+if "%op%"=="76" goto :op76
+if "%op%"=="80" goto :op80
+
+if "%op%"=="81" goto :op81
+if "%op%"=="82" goto :op82
+if "%op%"=="83" goto :op83
+if "%op%"=="84" goto :op84
+if "%op%"=="85" goto :op85
+if "%op%"=="86" goto :op86
+if "%op%"=="87" goto :op87
+
+if "%op%"=="101" goto :op101
+if "%op%"=="102" goto :op102
+
+if "%op%"=="121" goto :op121
+if "%op%"=="122" goto :op122
+if "%op%"=="123" goto :op123
+
+goto :MainMenu
+:: ProgramsList=======================================================================================================
+:op1
+cls
+@echo.
+@echo.                                            7-Zip Installation
+@echo.  Downloading Please Wait ...
+if "%OSArchitecture%" equ "x64" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\7zip.exe" "https://7-zip.org/a/7z2201-x64.exe"
+	echo.  Installing Please Wait ...
+	"%Temp%\7zip.exe" /S
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\7zip.exe" "https://7-zip.org/a/7z2201.exe"
+	echo.  Installing Please Wait ...
+	"%Temp%\7zip.exe" /S
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+:op2
+cls
+@echo.
+@echo.                                            WinRAR Installation
+@echo.  Downloading Please Wait ...
+if "%OSArchitecture%" equ "x64" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\WinRAR.exe" "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-621.exe"
+	echo.  Installing Please Wait ...
+	"%Temp%\WinRAR.exe" /S
+	xcopy /s /y /q "%Tweaks%\rarreg.key" "%programfiles%\WinRAR" >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\WinRAR.exe" "https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x32-621.exe"
+	echo.  Installing Please Wait ...
+	"%Temp%\WinRAR.exe" /S
+	xcopy /s /y /q "%Tweaks%\rarreg.key" "%programfiles%\WinRAR" >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+:op3
+cls
+@echo.
+@echo.                                          UltraISO Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\uiso97pes.exe" "https://sharedby.blomp.com/ATY1lG"
+@echo.  Installing Please Wait ...
+"%Temp%\uiso97pes.exe" /VERYSILENT /NORESTART
+Reg.exe add "HKCU\SOFTWARE\EasyBoot Systems\UltraISO\5.0" /v "UserName" /t REG_SZ /d "UltraISO" /f >nul 2>&1
+Reg.exe add "HKCU\SOFTWARE\EasyBoot Systems\UltraISO\5.0" /v "Registration" /t REG_SZ /d "f2d8feaeabac8c8ffedff3dea7a0f9fc" /f >nul 2>&1
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op4
+cls
+@echo.
+@echo.                                            AIMP Installation
+@echo.  Downloading Please Wait ...
+if "%OSArchitecture%" equ "x64" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\AIMP.exe" "https://www.aimp.ru/?do=download.file&id=29"
+	echo.  Installing Please Wait ...
+	"%Temp%\AIMP.exe" /AUTO /SILENT
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\AIMP.exe" "https://www.aimp.ru/?do=download.file&id=4"
+	echo.  Installing Please Wait ...
+	"%Temp%\AIMP.exe" /AUTO /SILENT
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+:op5
+cls
+@echo.
+@echo.                                          K-Lite Codec Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\K-Lite.exe" "https://sharedby.blomp.com/AXbkyE"
+@echo.  Installing Please Wait ...
+"%Temp%\K-Lite.exe" /verysilent
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op6
+cls
+@echo.
+@echo.                                        Wise Disk Cleaner Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\WiseDiskCleaner.exe" "https://www.wisecleaner.com/index.php?r=download-product/latest-version&product=wise-disk-cleaner"
+@echo.  Installing Please Wait ...
+"%Temp%\WiseDiskCleaner" /VERYSILENT /NORESTART
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op7
+cls
+@echo.
+@echo.                                      Avast Free Antivirus Installation
+@echo.  Downloading Installer Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Avast_Free.exe" "https://sharedby.blomp.com/Qrkv9d"
+@echo.  Starting Installer ...
+"%Temp%\Avast_Free.exe"
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op8
+cls
+@echo.
+@echo.                                         Edge Chromium Installation
+@echo.  Downloading Installer Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Edge.exe" "https://c2rsetup.officeapps.live.com/c2r/downloadEdge.aspx?platform=Default&source=EdgeStablePage&Channel=Stable&language=en&brand=M100"
+@echo.  Starting Installer ...
+"%Temp%\Edge.exe"
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op9
+cls
+@echo.
+@echo.                                         Google Chrome Installation
+@echo.  Downloading Installer Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\GoogleChrome.exe" "https://sharedby.blomp.com/0c2UEF"
+@echo.  Starting Installer ...
+"%Temp%\GoogleChrome.exe"
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op10
+cls
+@echo.
+@echo.                                         Mozilla Firefox Installation
+@echo.  Downloading Installer Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Mozilla.exe" "https://sharedby.blomp.com/i5rIAT"
+@echo.  Starting Installer ...
+"%Temp%\Mozilla.exe"
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op11
+cls
+@echo.
+@echo.                                         Brave Browser Installation
+@echo.  Downloading Installer Please Wait ...
+if "%OSArchitecture%" equ "x64" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Brave.exe" "https://laptop-updates.brave.com/latest/winx64"
+	echo.  Starting Installer ...
+	"%Temp%\Brave.exe"
+	echo.  Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Brave.exe" "https://laptop-updates.brave.com/latest/winia32"
+	echo.  Starting Installer ...
+	"%Temp%\Brave.exe"
+	echo.  Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+:op21
+cls                                   
+@echo.           
+@echo.                                       Driver Easy 5.7 Pro Portable
+@echo. 
+@echo. Downloading...
+@echo.
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\DriverEasy.7z" "https://sharedby.blomp.com/2d4sre"
+%zip% x -y "%Temp%\DriverEasy.7z" -o%Temp%  >nul 2>&1
+xcopy /s /y /q "%Temp%\DriverEasy" "%SystemDrive%\AnkhTech" /E /I >nul 2>&1
+xcopy /s /y /q "%SystemDrive%\AnkhTech\Drive Easy Pro 5.7\App\DriverEasy Pro 5.7.lnk" "%userprofile%\Desktop" >nul 2>&1
+@echo.
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op22
+cls                                   
+@echo.           
+@echo.                                       DriverBooster 10 Pro Portable
+@echo. 
+@echo. Downloading...
+@echo.
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\DriverBooster.7z" "https://sharedby.blomp.com/gG8lZr"
+%zip% x -y "%Temp%\DriverBooster.7z" -o%Temp%  >nul 2>&1
+xcopy /s /y /q "%Temp%\DriverBooster Pro 10" "%SystemDrive%\AnkhTech" /E /I >nul 2>&1
+xcopy /s /y /q "%SystemDrive%\AnkhTech\DriverBooster\DriverBooster.lnk" "%userprofile%\Desktop" >nul 2>&1
+@echo.
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op23
+cls                                   
+@echo.           
+@echo.                                     MiniTool Partition Wizard Pro 12.7
+@echo. 
+@echo. Downloading...
+@echo.
+if "%OSArchitecture%" equ "x64" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\MiniTool.7z" "https://sharedby.blomp.com/x8ZnB6"
+	echo.  Installing Please Wait ...
+	%zip% x -y "%Temp%\MiniTool.7z" -o%Temp%  >nul 2>&1
+	xcopy /s /y /q "%Temp%\MiniTool" "%SystemDrive%\AnkhTech" /E /I >nul 2>&1
+	xcopy /s /y /q "%SystemDrive%\AnkhTech\MiniTool Partition Wizard 12.7\MiniTool Partition Wizard 12.7 Pro.lnk" "%userprofile%\Desktop" >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\MiniTool.7z" "https://sharedby.blomp.com/q3CcJc"
+	echo.  Installing Please Wait ...
+	%zip% x -y "%Temp%\MiniTool.7z" -o%Temp%  >nul 2>&1
+	xcopy /s /y /q "%Temp%\MiniTool" "%SystemDrive%\AnkhTech" /E /I >nul 2>&1
+	xcopy /s /y /q "%SystemDrive%\AnkhTech\MiniTool Partition Wizard 12.7\MiniTool Partition Wizard 12.7 Pro.lnk" "%userprofile%\Desktop" >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+
+:: Frameworklist=======================================================================================================
+
+:op41
+cls
+@echo.
+@echo.                                          AdobeAIR Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\AdobeAIR.exe" "https://airsdk.harman.com/assets/downloads/AdobeAIR.exe"
+@echo.  Installing Please Wait ...
+"%Temp%\AdobeAIR.exe" -silent -eulaAccepted
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op42
+cls
+@echo.
+@echo.                                        Microsoft XNA Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Microsoft_XNA.msi" "https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
+@echo.  Installing Please Wait ...
+"%Temp%\Microsoft_XNA.msi" /quiet
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op43
+cls
+@echo.
+@echo.                                           OpenAL Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\OpenAL.exe" "https://sharedby.blomp.com/wqz1PE"
+@echo.  Installing Please Wait ...
+"%Temp%\OpenAL.exe" /S
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op44
+cls
+@echo.
+@echo.                                           DirectX Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\DirectX.exe" "https://sharedby.blomp.com/WzgicQ"
+@echo.  Installing Please Wait ...
+"%Temp%\DirectX.exe" /ai /gm2
+@echo.  Installation Finished Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op45
+cls
+@echo.
+@echo.                                     Visual C++ 2005-2022 Installation
+@echo.
+if "%OSArchitecture%" equ "x64" (
+	echo.  Downloading Visual C++ 2005 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x64.EXE"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE"
+	echo.   Installing Visual C++ 2005 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /Q
+	"%Temp%\vcredist_x86.exe" /Q
+	echo.   Installing Visual C++ 2005 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2008 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2008 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /q
+	"%Temp%\vcredist_x86.exe" /q
+	echo.   Installing Visual C++ 2008 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2010 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2010 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /q /norestart
+	"%Temp%\vcredist_x86.exe" /q /norestart
+	echo.   Installing Visual C++ 2010 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2012 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2012 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /install /quiet /norestart
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2012 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2013 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://aka.ms/highdpimfc2013x64enu"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/highdpimfc2013x86enu"
+	echo.   Installing Visual C++ 2013 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /install /quiet /norestart
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2013 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2015-2022 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+	echo.   Installing Visual C++ 2015-2022 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /install /quiet /norestart
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2015-2022 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	echo.  Downloading Visual C++ 2005 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE"
+	echo.   Installing Visual C++ 2005 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /Q
+	echo.   Installing Visual C++ 2005 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2008 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2008 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /q
+	echo.   Installing Visual C++ 2008 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2010 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2010 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /q /norestart
+	echo.   Installing Visual C++ 2010 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2012 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2012 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2012 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2013 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/highdpimfc2013x86enu"
+	echo.   Installing Visual C++ 2013 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2013 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2015-2022 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+	echo.   Installing Visual C++ 2015-2022 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2015-2022 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+:op50
+cls
+@echo.================================================================================================================
+@echo.====================  All Runtimes Installation Please Be Patient This Will Take a While.  =====================
+@echo.================================================================================================================
+@echo.
+@echo.                                          AdobeAIR Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\AdobeAIR.exe" "https://airsdk.harman.com/assets/downloads/AdobeAIR.exe"
+@echo.  Installing Please Wait ...
+"%Temp%\AdobeAIR.exe" -silent -eulaAccepted
+@echo.
+@echo.                                        Microsoft XNA Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\Microsoft_XNA.msi" "https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
+@echo.  Installing Please Wait ...
+"%Temp%\Microsoft_XNA.msi" /quiet
+@echo.
+@echo.                                           OpenAL Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\OpenAL.exe" "https://sharedby.blomp.com/wqz1PE"
+@echo.  Installing Please Wait ...
+"%Temp%\OpenAL.exe" /S
+@echo.
+@echo.                                           DirectX Installation
+@echo.  Downloading Please Wait ...
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\DirectX.exe" "https://sharedby.blomp.com/WzgicQ"
+@echo.  Installing Please Wait ...
+"%Temp%\DirectX.exe" /ai /gm2
+@echo.
+@echo.                                     Visual C++ 2005-2022 Installation
+@echo.
+if "%OSArchitecture%" equ "x64" (
+	echo.  Downloading Visual C++ 2005 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x64.EXE"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE"
+	echo.   Installing Visual C++ 2005 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /Q
+	"%Temp%\vcredist_x86.exe" /Q
+	echo.   Installing Visual C++ 2005 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2008 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2008 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /q
+	"%Temp%\vcredist_x86.exe" /q
+	echo.   Installing Visual C++ 2008 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2010 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2010 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /q /norestart
+	"%Temp%\vcredist_x86.exe" /q /norestart
+	echo.   Installing Visual C++ 2010 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2012 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2012 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /install /quiet /norestart
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2012 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2013 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://aka.ms/highdpimfc2013x64enu"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/highdpimfc2013x86enu"
+	echo.   Installing Visual C++ 2013 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /install /quiet /norestart
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2013 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2015-2022 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x64.exe" "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+	echo.   Installing Visual C++ 2015-2022 Please Wait ...
+	"%Temp%\vcredist_x64.exe" /install /quiet /norestart
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2015-2022 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+if "%OSArchitecture%" equ "x86" (
+	echo.  Downloading Visual C++ 2005 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE"
+	echo.   Installing Visual C++ 2005 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /Q
+	echo.   Installing Visual C++ 2005 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2008 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2008 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /q
+	echo.   Installing Visual C++ 2008 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2010 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2010 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /q /norestart
+	echo.   Installing Visual C++ 2010 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2012 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe"
+	echo.   Installing Visual C++ 2012 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2012 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2013 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/highdpimfc2013x86enu"
+	echo.   Installing Visual C++ 2013 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2013 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Downloading Visual C++ 2015-2022 Please Wait ...
+	%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\vcredist_x86.exe" "https://aka.ms/vs/17/release/vc_redist.x86.exe"
+	echo.   Installing Visual C++ 2015-2022 Please Wait ...
+	"%Temp%\vcredist_x86.exe" /install /quiet /norestart
+	echo.   Installing Visual C++ 2015-2022 Finished
+	@echo.
+	Del /S /Q %Temp% >nul 2>&1
+	echo.  Installation Finished Press Any Key to go back To Main Menu
+	pause >nul
+	goto :MainMenu
+)
+
+:: Activations=======================================================================================================
+
+:op61
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                    This script is a part of 'Microsoft Activation Scripts' (MAS) project.
+@echo.                                          Homepage: massgrave.dev
+@echo.                                      Email: windowsaddict@protonmail.com
+@echo.================================================================================================================
+@echo.
+@echo.                              This is KMS38 Activation, Activates Until Year 2038
+@echo.           
+@echo.                                Press Any Key to Start the Activation Process  
+pause >nul
+call "%Tweaks%\MAS_AIO.cmd" /KMS38
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op62
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                    This script is a part of 'Microsoft Activation Scripts' (MAS) project.
+@echo.                                          Homepage: massgrave.dev
+@echo.                                      Email: windowsaddict@protonmail.com
+@echo.================================================================================================================
+@echo.
+@echo.                         This is Digital Activation (HWID), Activates Windows permanently
+@echo.           
+@echo.                               Internet Connection Required for this Activation
+@echo.
+@echo.                                 Press Any Key to Start the Activation Process  
+pause >nul
+call "%Tweaks%\MAS_AIO.cmd" /HWID
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op63
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                                       This script is a part of 'KMS Suite'
+@echo.                                            Homepage: www.tnctr.com
+@echo.                                                By mephistooo2
+@echo.================================================================================================================
+@echo.
+@echo.                                 This is (KMS Inject) Offline Activation For Windows
+@echo.           
+@echo.                                  Press Any Key to Start the Activation Process  
+pause >nul
+@echo. 
+@echo. Please Wait...
+@echo. 
+call "%Tweaks%\KMSInject1.bat" /WindowsInject
+@echo.
+goto :MainMenu
+
+:op64
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                    This script is a part of 'Microsoft Activation Scripts' (MAS) project.
+@echo.                                          Homepage: massgrave.dev
+@echo.                                      Email: windowsaddict@protonmail.com
+@echo.================================================================================================================
+@echo.         
+@echo.                               Internet Connection Required for this Activation
+@echo.
+@echo.                                 Press Any Key to Start the Activation Process  
+pause >nul
+call "%Tweaks%\MAS_AIO.cmd" /KMS-ActAndRenewalTask
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op71
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                        This script is a part of 'Microsoft Activation Scripts' (MAS) project.
+@echo.                                            Homepage: massgrave.dev
+@echo.                                      Email: windowsaddict@protonmail.com
+@echo.================================================================================================================
+@echo.
+@echo.                                 This is Online Activation For Microsoft Office
+@echo.           
+@echo.                               Internet Connection Required for this Activation
+@echo.
+@echo.                                Press Any Key to Start the Activation Process  
+pause >nul
+call "%Tweaks%\MAS_AIO.cmd" /KMS-Office
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op72
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                                       This script is a part of 'KMS Suite'
+@echo.                                            Homepage: www.tnctr.com
+@echo.                                                By mephistooo2
+@echo.================================================================================================================
+@echo.
+@echo.                                 This is Offline Activation For Microsoft Office
+@echo.           
+@echo.                                  Press Any Key to Start the Activation Process  
+pause >nul
+@echo. 
+@echo. Please Wait...
+@echo. 
+call "%Tweaks%\KMSInject1.bat" /OfficeInject
+@echo.
+goto :MainMenu
+
+:op75
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                                       This is Daz Loader Activation
+@echo.                                                    By Daz
+@echo.================================================================================================================
+@echo.
+@echo.                              CAUTION : This Activator Will be Detected as a Virus 
+@echo.
+@echo.                                     Please Disable Your Antivirus First
+@echo.           
+@echo.                    Press Any Key to Start the Activation Process After You Disable Your Antivirus 
+pause >nul
+@echo.
+@echo. Downloading the Activator
+@echo.
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\DazLoader.7z" "https://sharedby.blomp.com/RkswBA"
+%zip% e "%Temp%\DazLoader.7z" -o%Temp%  >nul 2>&1
+@echo.
+@echo. Activation Started , Please Wait...
+"%Temp%\Windows_7_Activation.exe" /silent /preactivate
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op76
+cls
+@echo.
+@echo.================================================================================================================
+@echo.                                              This is RemoveWAT
+@echo.                                                   By Hazar
+@echo.================================================================================================================
+@echo. 
+@echo.                               CAUTION : This Activator Will be Detected as a Virus 
+@echo.
+@echo.                                      Please Disable Your Antivirus First
+@echo.           
+@echo.                    Press Any Key to Start the Activation Process After You Disable Your Antivirus 
+pause >nul
+@echo.
+@echo. Downloading the Activator
+@echo.
+%wget% --no-check-certificate -q -nc --show-progress -O "%Temp%\RemoveWAT.7z" "https://sharedby.blomp.com/lkUYVT"
+%zip% e "%Temp%\RemoveWAT.7z" -o%Temp% >nul 2>&1
+@echo.
+@echo. Activator Started Press Remove WAT
+"%Temp%\Remove_v2.2.5.exe"
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op80
+cls
+call "%Tweaks%\KMSInject1.bat" /Check
+@echo.
+@echo.
+@echo.  Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:: TweaksList=======================================================================================================
+
+:op81
+cls
+@echo.  
+@echo.  Windows Photo Viewer Enabled
+reg import "%Tweaks%\Activate_Windows_Photo_Viewer.reg" >nul 2>&1
+@echo.
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op82
+cls
+@echo.  
+@echo.  Added Take Ownership to Context menu
+reg import "%Tweaks%\Add_Take_Ownership.reg" >nul 2>&1
+@echo.
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op83
+cls
+@echo.
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseFeatureUpdatesStartTime" /t REG_SZ /d "2022-09-27T22:13:15Z" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseQualityUpdatesStartTime" /t REG_SZ /d "2022-09-27T22:13:15Z" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseUpdatesExpiryTime" /t REG_SZ /d "2050-11-01T22:13:15Z" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseFeatureUpdatesEndTime" /t REG_SZ /d "2050-11-01T22:13:15Z" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseQualityUpdatesEndTime" /t REG_SZ /d "2050-11-01T22:13:15Z" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseUpdatesStartTime" /t REG_SZ /d "2022-09-27T22:13:15Z" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedQualityStatus" /t REG_DWORD /d "1" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedFeatureStatus" /t REG_DWORD /d "1" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedQualityDate" /t REG_SZ /d "2022-09-27 22:13:15" /f >nul 2>&1
+Reg.exe add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedFeatureDate" /t REG_SZ /d "2022-09-27 22:13:15" /f >nul 2>&1
+@echo.  Updates Paused Until 2050
+@echo.
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op84
+cls
+@echo.  
+@echo.                                    Reserved Storage Setting
+@echo.
+@echo off
+choice /c 123 /n /m "Press 1 to Disable , Press 2 to Enable , Press 3 to go back to Main Menu : "
+if errorlevel 3 goto :MainMenu
+if errorlevel 2 goto :enablereserved
+if errorlevel 1 goto :disablereserved
+:enablereserved
+dism /Online /Set-ReservedStorageState /State:Enabled
+@echo.
+@echo.    Reserved Storage Enabled , Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+:disablereserved
+dism /Online /Set-ReservedStorageState /State:Disabled
+@echo.
+@echo.    Reserved Storage Disabled , Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+
+:op85
+cls
+@echo.  
+@echo.  Hibernation Setting
+@echo.
+@echo off
+choice /c 123 /n /m "Press 1 to Disable , Press 2 to Enable , Press 3 to go back to Main Menu : "
+if errorlevel 3 goto :MainMenu
+if errorlevel 2 goto :enablehibernation
+if errorlevel 1 goto :disablehibernation
+:enablehibernation
+powercfg -h on
+@echo.
+@echo.    Hibernation Enabled , Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+:disablehibernation
+powercfg -h off
+@echo.
+@echo.    Hibernation Disabled , Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op86
+cls
+@echo.
+@echo.
+@echo.               This will make your windows Compact
+@echo.
+@echo.      It will save disk space and decrease your Windows size
+@echo.                        
+@echo.      The process of compressing will take time so be patient 
+@echo.                     
+@echo.
+@echo off
+choice /c 12 /n /m "Press 1 to Start , Press 2 to go back to Main Menu : "
+
+if errorlevel 2 goto :MainMenu
+if errorlevel 1 goto :compressing
+
+:compressing
+compact /c /s /i /a /exe:XPRESS8K "C:\Program Files\*"
+compact /c /s /i /a /exe:XPRESS8K "C:\Program Files (x86)\*"
+compact /c /s /i /exe:XPRESS8K "C:\Windows\*"
+compact /c /s /i /a /exe:XPRESS8K "C:\ProgramData\*"
+@echo.
+@echo.    Compressing Finished , Press Any Key to go Back to Main Menu
+pause >nul
+goto :MainMenu
+
+:op87
+cls
+@echo.  This Process Removes old Updates Files
+@echo.  Cleaning up WinSxS Please Wait...
+@echo.
+1>nul 2>&1 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Configuration" /f /v "DisableResetbase" /t "reg_DWORD" /d 0
+DISM.exe /online /Cleanup-Image /SPSuperseded
+DISM.exe /online /Cleanup-Image /StartComponentCleanup
+DISM.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
+@echo.
+@echo.  Cleaning Finished, Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op101
+cls
+@echo.  
+@echo.  Highest Performance Tweaks Applied
+reg import "%Tweaks%\Best_Performance.reg" >nul 2>&1
+@echo.
+@echo.  Please Restart your Windows for Changes to Take Effect.
+@echo.
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+:op102
+cls
+@echo.================================================================================================================
+@echo        ################################# Disable Windows Defender #####################################
+@echo.================================================================================================================
+@echo.
+@echo.                                              Warning!!!
+@echo.
+@echo.                   This will disable windows defender and security center Permanently
+@echo.                   Make Sure you Install another Antivirus After applying this Tweak
+@echo.                 This action cannot be Undone , Windows defender can't be enabled again
+@echo.                     
+@echo.
+@echo off
+choice /c 12 /n /m "Press 1 to Disable Windows Defender , Press 2 to go back to Main Menu : "
+if errorlevel 2 goto :MainMenu
+if errorlevel 1 goto :disabledefender
+:disabledefender
+@echo.
+@echo.  Windows Defender Disabled
+@echo.  Please Restart your PC for changes to take effect
+reg import "%Tweaks%\Defender_Disable.reg" >nul 2>&1
+@echo.
+@echo.  Press Any Key to go back To Main Menu
+pause >nul
+goto :MainMenu
+
+
+
+
+
+
+
+:op121
+cls
+START https://ankhtech.weebly.com/support-hearts-donate.html
+goto :MainMenu
+
+:op122
+cls
+START https://ankhtech.weebly.com
+goto :MainMenu
+
+:op123
+RD /S /Q "%Temp%" >nul 2>&1
+Del /S /Q %Temp% >nul 2>&1
+exit
